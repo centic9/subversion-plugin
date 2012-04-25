@@ -44,6 +44,7 @@ import java.util.Set;
 
 import org.kohsuke.stapler.export.Exported;
 import org.kohsuke.stapler.export.ExportedBean;
+import org.tmatesoft.svn.core.internal.util.SVNDate;
 
 /**
  * {@link ChangeLogSet} for Subversion.
@@ -63,7 +64,8 @@ public final class SubversionChangeLogSet extends ChangeLogSet<LogEntry> {
         this.logs = prepareChangeLogEntries(logs);
     }
 
-    public boolean isEmptySet() {
+    @Override
+	public boolean isEmptySet() {
         return logs.isEmpty();
     }
 
@@ -142,7 +144,8 @@ public final class SubversionChangeLogSet extends ChangeLogSet<LogEntry> {
         /**
          * Gets the {@link SubversionChangeLogSet} to which this change set belongs.
          */
-        public SubversionChangeLogSet getParent() {
+        @Override
+		public SubversionChangeLogSet getParent() {
             return (SubversionChangeLogSet)super.getParent();
         }
 
@@ -176,6 +179,11 @@ public final class SubversionChangeLogSet extends ChangeLogSet<LogEntry> {
         }
 
         @Override
+        public long getTimestamp() {
+            return date!=null ? SVNDate.parseDate(date).getTime() : -1;
+        }
+
+        @Override
         public User getAuthor() {
             if(author==null)
                 return User.getUnknown();
@@ -185,10 +193,12 @@ public final class SubversionChangeLogSet extends ChangeLogSet<LogEntry> {
         @Override
         public Collection<String> getAffectedPaths() {
             return new AbstractList<String>() {
-                public String get(int index) {
+                @Override
+				public String get(int index) {
                     return preparePath(paths.get(index).value);
                 }
-                public int size() {
+                @Override
+				public int size() {
                     return paths.size();
                 }
             };

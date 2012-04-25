@@ -653,7 +653,7 @@ public class SubversionSCMTest extends AbstractSubversionTest {
         SVNStatus st = wc.getStatusClient().doStatus(new File(b.getWorkspace().getRemote()+"/a"), false);
         int wcf = st.getWorkingCopyFormat();
         System.out.println(wcf);
-        assertEquals(SVNAdminAreaFactory.WC_FORMAT_14,wcf);
+        assertEquals(/*TOOD: no official constant for Version 1.7?! Did only find internal ISVNWCDb.WC_FORMAT_17: SVNAdminAreaFactory.WC_FORMAT_14*/ 29 ,wcf);
     }
 
     private static String readFileAsString(File file)
@@ -1116,6 +1116,7 @@ public class SubversionSCMTest extends AbstractSubversionTest {
                 }
             });
             FreeStyleBuild b = buildAndAssertSuccess(p);
+            System.out.println(b.getLog());
 
             // this should have created b and c
             FilePath ws = b.getWorkspace();
